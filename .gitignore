@@ -2,8 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
-LALY/Data/cmip5
-LALY/Data/wc0.5
+Data/cmip5
+Data/wc0.5
 LALY/Data/Hist_LALY*
 LALY/Data/mg60bi50_LALY*
 LALY/Data/mg60bi70_LALY*
