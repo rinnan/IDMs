@@ -58,7 +58,7 @@ for(i in 1:length(mg60bi50.files)){
 }
 mg60bi50.br <- brick(ras)
 names(mg60bi50.br) <- c("MAT", "MDR", "ISO", "TS", "HMmax", "CMmin", "TAR", "MTWQ", "MTDQ", "MTHQ", "MTCQ", 
-                    "MAP", "PWM", "PDM", "PS", "PWQ", "PDQ", "PHQ", "PCQ")
+                        "MAP", "PWM", "PDM", "PS", "PWQ", "PDQ", "PHQ", "PCQ")
 
 writeRaster(mg60bi50.br, filename = "Data/mg60bi50_LALY.grd")
 
@@ -80,3 +80,28 @@ names(mg60bi70.br) <- c("MAT", "MDR", "ISO", "TS", "HMmax", "CMmin", "TAR", "MTW
                         "MAP", "PWM", "PDM", "PS", "PWQ", "PDQ", "PHQ", "PCQ")
 
 writeRaster(mg60bi70.br, filename = "Data/mg60bi70_LALY.grd")
+
+
+#############
+
+fixPoly <- function(pgn){
+  tp <- which(pgn@data$CODE == 0)
+  if(length(tp) > 0){
+    pgn[-tp,]} else
+    {pgn}
+}
+
+laly <- fixPoly(laly)
+plot(laly, col = "green")
+laly.sp <- rasterize(x = laly, y = hist.br.crop, field = "CODE")
+laly.sp <- rasterToPoints(laly.sp, spatial = T)
+plot(laly.sp)
+writeOGR(obj = laly.sp, dsn = "Data", layer = "LALY_points", driver = "ESRI Shapefile")
+
+
+# .csv
+hbr <- brick("Data/Hist_LALY.grd")
+laly.sp <- rasterize(x = laly, y = hbr, field = "CODE")
+laly.sp <- rasterToPoints(laly.sp)
+laly.sp <- cbind("LALY", as.data.frame(laly.sp), stringsAsFactors = F)
+write.csv(laly.sp[, -4], file = "Data/LALY_points.csv", row.names = F)
